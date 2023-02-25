@@ -8,15 +8,15 @@ assignees: ''
 
 ## Describe the problem
 
-A clear and concise description of what the bug is.
+<!-- A clear and concise description of what the bug is. -->
 
 ## Actual behavior
 
-A clear and concise description of what you experienced.
+<!-- A clear and concise description of what you experienced. -->
 
 ## Expected behavior
 
-A clear and concise description of what you expected to happen.
+<!-- A clear and concise description of what you expected to happen. -->
 
 ## To Reproduce
 
@@ -29,12 +29,12 @@ Steps to reproduce the behavior:
 
 ## Screenshots
 
-If applicable, add screenshots or gifs to help explain your problem.
+<!-- If applicable, add screenshots or gifs to help explain your problem. -->
 
 ## Your Environment:
 
--   Any other software that may impact this issue
+<!-- -   Any other software that may impact this issue -->
 
 ## Additional Information
 
-Add any other context about the problem here.
+<!-- Add any other context about the problem here. -->
