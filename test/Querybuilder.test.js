@@ -1,4 +1,3 @@
-// const Querybuilder = require('../query_builder/Querybuilder');
 const SelectBuilder = require("../query_builder/SelectBuilder");
 const InsertBuilder = require("../query_builder/InsertBuilder");
 const CreateBuilder = require("../query_builder/CreateBuilder");
