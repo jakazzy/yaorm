@@ -141,5 +141,72 @@ describe("QueryBuilder", () => {
 
       expect(createBuilder).toBe("CREATE TABLE user (id VARCHAR(255), name VARCHAR(255), email VARCHAR(255), createdAt TIMESTAMP, updatedAt TIMESTAMP)");
     });
+    describe('CreateBuilder', () => {
+      describe('table', () => {
+        it('should set the table name in the query', () => {
+          const builder = new CreateBuilder();
+          builder.table('users');
+          expect(builder.query.table).toEqual('users');
+        });
+      });
+
+      describe('build', () => {
+        it('should generate a create table statement for the model class', () => {
+          class User {
+            constructor(firstName, lastName, email, age, isActive, createdAt) {
+              this.firstName = firstName;
+              this.lastName = lastName;
+              this.email = email;
+              this.age = age;
+              this.isActive = isActive;
+              this.createdAt = createdAt;
+            }
+          }
+
+          const builder = new CreateBuilder(User);
+          const expected = 'CREATE TABLE users (firstName VARCHAR(255), lastName VARCHAR(255), email VARCHAR(255), age INTEGER, isActive BOOLEAN, createdAt TIMESTAMP)';
+          const result = builder.build();
+          expect(result).toEqual(expected);
+        });
+
+        it('should use the table name from the query if specified', () => {
+          class User {
+            constructor(firstName, lastName, email, age, isActive, createdAt) {
+              this.firstName = firstName;
+              this.lastName = lastName;
+              this.email = email;
+              this.age = age;
+              this.isActive = isActive;
+              this.createdAt = createdAt;
+            }
+          }
+
+          const builder = new CreateBuilder(User);
+          builder.table('customers');
+          const expected = 'CREATE TABLE customers (firstName VARCHAR(255), lastName VARCHAR(255), email VARCHAR(255), age INTEGER, isActive BOOLEAN, createdAt TIMESTAMP)';
+          const result = builder.build();
+          expect(result).toEqual(expected);
+        });
+
+        it('should use VARCHAR(255) as the default data type for unrecognized types', () => {
+          class Product {
+            constructor(name, price, isAvailable) {
+              this.name = name;
+              this.price = price;
+              this.isAvailable = isAvailable;
+            }
+          }
+
+          const builder = new CreateBuilder(Product);
+          const expected = 'CREATE TABLE products (name VARCHAR(255), price VARCHAR(255), isAvailable VARCHAR(255))';
+          const result = builder.build();
+          expect(result).toEqual(expected);
+        });
+      });
+    });
   });
 });
+
+
+
+
