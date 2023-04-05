@@ -15,8 +15,8 @@ class QueryBuilder {
     return this.selectBuilder;
   }
 
-  insert(model) {
-    this.insertBuilder = new InsertBuilder(model);
+  insert(model,data) {
+    this.insertBuilder = new InsertBuilder(model,data);
     return this.insertBuilder;
   }
 
