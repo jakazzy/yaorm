@@ -3,6 +3,7 @@ const InsertBuilder = require("../query_builder/InsertBuilder");
 const CreateBuilder = require("../query_builder/CreateBuilder");
 const QueryBuilder = require("../query_builder/QueryBuilder");
 
+
 describe("QueryBuilder", () => {
   describe("select", () => {
     it("should create and return a new SelectBuilder instance", () => {
@@ -36,11 +37,92 @@ describe("QueryBuilder", () => {
       expect(query).toBe("SELECT * FROM users WHERE id = 1 LIMIT 10");
     });
 
-    it("should return the correct query for an InsertBuilder instance", () => {
-      const queryBuilder = new QueryBuilder();
-      const insertBuilder = queryBuilder.insert({ name: "John", email: "john@example.com" }).into("users");
-      const query = queryBuilder.build();
-      expect(query).toBe(`INSERT INTO users (name, email) VALUES ('John', 'john@example.com')`);
+    describe('InsertBuilder', () => {
+      describe('build', () => {
+        it('generates a valid SQL statement for a User instance', () => {
+          class User {
+            constructor(firstName, lastName, email) {
+              this.firstName = firstName;
+              this.lastName = lastName;
+              this.email = email;
+            }
+          }
+          const user = new User();
+          user.firstName = 'John';
+          user.lastName = 'Doe';
+          user.email = 'johndoe@example.com';
+
+          const insertBuilder = new InsertBuilder(User, user);
+          const insertStatement = insertBuilder.build();
+
+          expect(insertStatement).toBe("INSERT INTO users (firstName, lastName, email) VALUES ('John', 'Doe', 'johndoe@example.com')");
+        });
+
+        it('generates a valid SQL statement for a Car instance', () => {
+          class Car {
+            constructor(make, model, year) {
+              this.make = make;
+              this.model = model;
+              this.year = year;
+            }
+          }
+          const car = new Car();
+          car.make = 'Toyota';
+          car.model = 'Camry';
+          car.year = 2022;
+
+          const insertBuilder = new InsertBuilder(Car, car);
+          const insertStatement = insertBuilder.build();
+
+          expect(insertStatement).toBe("INSERT INTO cars (make, model, year) VALUES ('Toyota', 'Camry', 2022)");
+        });
+
+        it('generates a valid SQL statement for an object with Date values', () => {
+          class User {
+            constructor(firstName, lastName, email) {
+              this.firstName = firstName;
+              this.lastName = lastName;
+              this.email = email;
+              this.birthdate = new Date();
+            }
+          }
+          const data = {
+            firstName: 'John',
+            lastName: 'Doe',
+            email: 'johndoe@example.com',
+            birthdate: new Date('1990-01-01'),
+          };
+
+          const insertBuilder = new InsertBuilder(User, data);
+          const insertStatement = insertBuilder.build();
+
+          expect(insertStatement).toBe("INSERT INTO users (firstName, lastName, email, birthdate) VALUES ('John', 'Doe', 'johndoe@example.com', '1990-1-1')");
+        });
+
+        it('generates a valid SQL statement for an object with Boolean and Number values', () => {
+          class Car {
+            constructor(make, model, year) {
+              this.make = make;
+              this.model = model;
+              this.year = year;
+              this.isAvailable = false;
+              this.price = 0;
+            }
+          }
+          const data = {
+            make: 'Toyota',
+            model: 'Camry',
+            year: 2022,
+            isAvailable: true,
+            price: 24999.99,
+          };
+
+          const insertBuilder = new InsertBuilder(Car, data);
+          const insertStatement = insertBuilder.build();
+
+          expect(insertStatement).toBe("INSERT INTO cars (make, model, year, isAvailable, price) VALUES ('Toyota', 'Camry', 2022, true, 24999.99)");
+        });
+      });
     });
 
     it("should return the correct query for a CreateBuilder instance with table name inferred from class name", () => {
